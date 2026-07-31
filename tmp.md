@@ -7,7 +7,7 @@
 
 <p align = "center">
 <img width="400" height="300" alt="image" src="https://github.com/user-attachments/assets/44b1f90d-ab49-4ab3-a1cd-fa44cf1edf46" />
-</p>p>
+</p>
 
 
 ### Two Main Approaches
