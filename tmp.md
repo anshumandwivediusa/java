@@ -163,7 +163,7 @@ easy mocking for unit tests, in memory database vs production one, etc.
   → Not needed for certification, but useful in complex workflows.
 
 
-## 📊 Quick Cheat Sheet
+#### Quick Cheat Sheet
 
 | Scope | Real‑World Example | Why Useful |
 |-------|-------------------|------------|
