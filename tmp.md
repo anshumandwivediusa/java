@@ -139,6 +139,42 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication
+public class ScopeWebDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ScopeWebDemoApplication.class, args);
+    }
+}
+
+@Component
+@Scope("singleton")   // default
+class SingletonBean {
+    private int counter = 0;
+    public int increment() { return ++counter; }
+}
+
+@Component
+@Scope("request")     // new bean per HTTP request
+class RequestBean {
+    private int counter = 0;
+    public int increment() { return ++counter; }
+}
+
+@Component
+@Scope(WebApplicationContext.SCOPE_SESSION) // one bean per user session
+class SessionBean {
+    private int counter = 0;
+    public int increment() { return ++counter; }
+}
+
 @RestController
 @RequiredArgsConstructor   // Lombok generates constructor for final fields
 //Since Spring 4.3, in Spring Boot, if a bean is a constructor parameter of another bean, Spring automatically injects it — no @Autowired needed.
