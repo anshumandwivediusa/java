@@ -236,6 +236,14 @@ class DemoController {
 - can be XML or java based
 - Externalized from the bean class → separation of concerns
 
+| Configuration Type | Example | Usage |
+| --- | --- | --- |
+| XML | ``<bean ``id="..."/>`` | Legacy apps |
+| Annotation | ``@Component``, ``@Service`` | Modern apps |
+| Java Config | ``@Configuration ``+ ``@Bean`` | Explicit bean definitions |
+| Auto-Config | Starter dependencies | Spring Boot defaults |
+
+
 ## Externalizing Configuration Properties
 - Configuration values (DB connection, external endpoints, ...) should not be hard-coded in the configuration files
 - Better to externalize to, eg. to .properties files
