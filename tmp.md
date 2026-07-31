@@ -77,6 +77,22 @@ easy mocking for unit tests, in memory database vs production one, etc.
     SpringApplication app = new SpringApplication(ApplicationConfiguration.class);
     // ... customize app settings here
     context = app.run(args);
+
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.context.ApplicationContext;
+
+   @SpringBootApplication
+   public class DemoApplication {
+      public static void main(String[] args) {
+         ApplicationContext ctx = SpringApplication.run(DemoApplication.class, args);
+
+        // Fetch a bean from the context
+        MyService service = ctx.getBean(MyService.class);
+        service.doWork();
+      }
+   }
+
 ```
 
 [A] Additional ways to create app context
