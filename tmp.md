@@ -256,6 +256,10 @@ class DemoController {
     - System environment variables
     - Servlet context params
 
+
+#### Obtaining properties using Environment object    
+- Environment can be injected using @Autowired annotation
+- properties are obtained using environment.getProperty("propertyName")
     ```java
       import org.springframework.beans.factory.annotation.Autowired;
       import org.springframework.core.env.Environment;
@@ -277,10 +281,6 @@ class DemoController {
       }
 
    ```
-#### Obtaining properties using Environment object    
-- Environment can be injected using @Autowired annotation
-- properties are obtained using environment.getProperty("propertyName")
-
 #### Obtaining properties using @Value annotation
 - @Value("${propertyName}") can be used as an alternative to Environment object
 - can be used on fields on method parameters
