@@ -126,15 +126,34 @@ easy mocking for unit tests, in memory database vs production one, etc.
 - Scope can be defined by @Scope (eg. @Scope(BeanDefinition.SCOPE_SINGLETON)) annotation on the class-level of bean class
 
 #### Available Scopes
-- Singleton - One instance per application context, default if bean scope is not defined
-- Prototype - New instance is created every time bean is requested
-- Session - One instance per user session - Web Environment only
+- **Singleton** - One instance per application context, default if bean scope is not defined
+- **Prototype** - New instance is created every time bean is requested
+- **Session** - One instance per user session - Web Environment only
 - [A]Global-session - One global session shared among all portlets - Only in Web Portlet Environment
-- Request - One instance per each HTTP Request - Web Environment only
-- Custom - Can define multiple custom scopes with different names and lifecycle
-- Additional scopes available for Spring Web Flow applications (not needed for the certification)
+- **Request** - One instance per each HTTP Request - Web Environment only
+- **Custom** - Can define multiple custom scopes with different names and lifecycle
+- **Additional** scopes available for Spring Web Flow applications (not needed for the certification)
 
+```java
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequiredArgsConstructor   // Lombok generates constructor for final fields
+class DemoController {
+    private final SingletonBean singletonBean;
+    private final RequestBean requestBean;
+    private final SessionBean sessionBean;
+
+    @GetMapping("/test")
+    public String testScopes() {
+        return "Singleton: " + singletonBean.increment() +
+               " | Request: " + requestBean.increment() +
+               " | Session: " + sessionBean.increment();
+    }
+}
+```
 # Spring Configuration
 - can be XML or java based
 - Externalized from the bean class → separation of concerns
