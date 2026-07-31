@@ -255,7 +255,28 @@ class DemoController {
     - JVM System properties
     - System environment variables
     - Servlet context params
-    
+
+    ```
+      import org.springframework.beans.factory.annotation.Autowired;
+      import org.springframework.core.env.Environment;
+      import org.springframework.web.bind.annotation.GetMapping;
+      import org.springframework.web.bind.annotation.RestController;
+      
+      @RestController
+      public class ConfigController {
+      
+          @Autowired
+          private Environment environment;
+      
+          @GetMapping("/config")
+          public String getConfig() {
+              String appName = environment.getProperty("spring.application.name");
+              String serverPort = environment.getProperty("server.port");
+              return "App: " + appName + " running on port: " + serverPort;
+          }
+      }
+
+   ```
 #### Obtaining properties using Environment object    
 - Environment can be injected using @Autowired annotation
 - properties are obtained using environment.getProperty("propertyName")
