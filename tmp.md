@@ -308,6 +308,11 @@ public class ApplicationConfiguration {
 ```java
 @PropertySource("classpath:/com/example/myapp/config/application-{$ENV}.properties")
 ```
+| Approach | Example | Best Use Case |
+| --- | --- | --- |
+| **[@Value](ca://s?q=Spring_Boot_Value_annotation)** | ``@Value("${server.port}")`` | Single property injection |
+| **[Environment](ca://s?q=Spring_Boot_Environment_object)** | ``environment.getProperty("server.port")`` | Dynamic property access, conditional logic |
+| **[@ConfigurationProperties](ca://s?q=Spring_Boot_ConfigurationProperties)** | ``@ConfigurationProperties(prefix="myapp")`` | Grouped configs mapped to POJO |
 
 #### Spring Expression language
 - Acronym SpEL
