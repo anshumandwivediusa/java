@@ -141,6 +141,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor   // Lombok generates constructor for final fields
+//Since Spring 4.3, in Spring Boot, if a bean is a constructor parameter of another bean, Spring automatically injects it — no @Autowired needed.
 class DemoController {
     private final SingletonBean singletonBean;
     private final RequestBean requestBean;
