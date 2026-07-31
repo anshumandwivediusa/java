@@ -126,13 +126,54 @@ easy mocking for unit tests, in memory database vs production one, etc.
 - Scope can be defined by @Scope (eg. @Scope(BeanDefinition.SCOPE_SINGLETON)) annotation on the class-level of bean class
 
 #### Available Scopes
-- **Singleton** - One instance per application context, default if bean scope is not defined
-- **Prototype** - New instance is created every time bean is requested
-- **Session** - One instance per user session - Web Environment only
-- [A]Global-session - One global session shared among all portlets - Only in Web Portlet Environment
-- **Request** - One instance per each HTTP Request - Web Environment only
-- **Custom** - Can define multiple custom scopes with different names and lifecycle
-- **Additional** scopes available for Spring Web Flow applications (not needed for the certification)
+
+- **Singleton**  
+  *One instance per ApplicationContext (default).*  
+  🔹 Example: A **database connection pool manager** or **service class** like `UserService`.  
+  → You want one shared instance across the app to avoid multiple pools or duplicate logic.
+
+- **Prototype**  
+  *New instance every time bean is requested.*  
+  🔹 Example: A **PDF generator** or **email builder**.  
+  → Each request needs a fresh object with different content, so prototype scope makes sense.
+
+- **Request** (Web only)  
+  *One instance per HTTP request.*  
+  🔹 Example: A **form‑backing bean** in a Spring MVC controller.  
+  → Each HTTP request gets its own bean to hold request‑specific data.
+
+- **Session** (Web only)  
+  *One instance per user session.*  
+  🔹 Example: A **shopping cart bean** in an e‑commerce site.  
+  → Each user’s cart persists across multiple requests until the session ends.
+
+- **Global‑Session** (Portlet environment only)  
+  *One global session shared among all portlets.*  
+  🔹 Example: A **user profile bean** shared across multiple portlets in a portal application.  
+  → Rarely used today, but relevant in legacy portlet systems.
+
+- **Custom Scope**  
+  *Define your own lifecycle rules.*  
+  🔹 Example: A **tenant‑specific bean** in a multi‑tenant SaaS app.  
+  → Each tenant gets its own bean instance, managed by a custom scope.
+
+- **Additional Scopes (Spring Web Flow)**  
+  *Conversation scope, etc.*  
+  🔹 Example: A **wizard‑style form bean** that persists across multiple steps in a flow.  
+  → Not needed for certification, but useful in complex workflows.
+
+
+## 📊 Quick Cheat Sheet
+
+| Scope | Real‑World Example | Why Useful |
+|-------|-------------------|------------|
+| Singleton | Database pool, Service class | Shared, efficient |
+| Prototype | Report generator, Email builder | Fresh per use |
+| Request | Form bean | Request‑specific data |
+| Session | Shopping cart | User session persistence |
+| Global‑Session | User profile in portlets | Shared across portlets |
+| Custom | Tenant‑specific bean | Multi‑tenant lifecycle |
+
 
 ```java
 import lombok.RequiredArgsConstructor;
