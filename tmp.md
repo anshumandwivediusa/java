@@ -21,9 +21,9 @@
 2. **Dependency Lookup (DL)**  
    - Objects actively look up dependencies from a container/service.  
    - Patterns:  
-     - **Service Locator Pattern** → Central registry provides dependencies.  
-     - **Factory Pattern** → Factory class creates and supplies objects.  
-     - **JNDI Lookup Pattern** → Java Naming and Directory Interface used to fetch resources.  
+     - **Service Locator Pattern** → Central registry provides dependencies. Example: ServiceLocator.getService("PaymentService")  
+     - **Factory Pattern** → Factory class creates and supplies objects. Example: ConnectionFactory.createConnection().
+      - **JNDI Lookup Pattern** → Java Naming and Directory Interface used to fetch resources. Example: ctx.lookup("java:comp/env/jdbc/MyDB").
 
 ### Comparison Table
 
