@@ -1,5 +1,42 @@
 
-> Note: Topics marked with [A] are advanced and are not covered in the certification exam
+# Foundations of Spring Framework
+
+## Inversion of Control (IoC)
+- **Definition:** A design principle where the control of object creation and dependency management is inverted from the application code to a container/framework.  
+- **Goal:** Decoupling components, improving testability, and flexibility.  
+<img width="400" height="300" alt="image" src="https://github.com/user-attachments/assets/44b1f90d-ab49-4ab3-a1cd-fa44cf1edf46" />
+
+
+### Two Main Approaches
+1. **Dependency Injection (DI)**  
+   - Framework injects dependencies into objects.  
+   - Types:  
+     - **Constructor Injection** → Dependencies passed via constructor.  
+     - **Setter Injection** → Dependencies set via setter methods.  
+     - **Method Injection** → Dependencies passed via specific methods.  
+
+2. **Dependency Lookup (DL)**  
+   - Objects actively look up dependencies from a container/service.  
+   - Patterns:  
+     - **Service Locator Pattern** → Central registry provides dependencies.  
+     - **Factory Pattern** → Factory class creates and supplies objects.  
+     - **JNDI Lookup Pattern** → Java Naming and Directory Interface used to fetch resources.  
+
+### Comparison Table
+
+| Aspect | **Dependency Injection (DI)** | **Dependency Lookup (DL)** |
+|--------|-------------------------------|-----------------------------|
+| Control | Framework injects dependencies | Object requests dependencies |
+| Coupling | Loose coupling | Tighter coupling |
+| Testability | High | Lower |
+| Examples | Spring IoC container | Service Locator, JNDI |
+
+### 📌 Exam Quick Notes
+- **IoC Principle:** Framework controls object lifecycle.  
+- **DI vs DL:** DI is *passive* (dependencies given), DL is *active* (dependencies fetched).  
+- **Spring Framework:** Popular for DI (constructor, setter).  
+- **Service Locator:** Considered an anti-pattern in modern design (hides dependencies).  
+- **Factory Pattern:** Still widely used for controlled object creation.  
 
 # Dependency Injection In Spring
 ## DI Basics
