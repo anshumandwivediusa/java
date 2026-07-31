@@ -346,6 +346,13 @@ public class LocalConfig {
     //Config here
 }
 ```
+- Annotate a configuration class or bean with @Profile("profileName").
+- That bean will only be registered in the ApplicationContext if the given profile is active.
+
+- Profiles are activated via:
+   - application.properties → spring.profiles.active=dev
+   - Environment variables → SPRING_PROFILES_ACTIVE=prod
+   - Command line → --spring.profiles.active=test
 
 ## Composite configuration
 - Preferred way is to divide configuration to multiple files and then import them when used
