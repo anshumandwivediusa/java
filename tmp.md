@@ -354,6 +354,110 @@ public class LocalConfig {
    - Environment variables → SPRING_PROFILES_ACTIVE=prod
    - Command line → --spring.profiles.active=test
 
+### How to Define Multiple Profiles
+
+#### **Option 1: Separate Property Files**
+Create different files for each profile:
+- `application-dev.properties`
+- `application-test.properties`
+- `application-prod.properties`
+
+Each file contains profile‑specific properties, e.g.:
+
+```properties
+# application-dev.properties
+spring.datasource.url=jdbc:h2:mem:devdb
+spring.datasource.username=dev
+spring.datasource.password=dev123
+```
+
+```properties
+# application-test.properties
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.username=test
+spring.datasource.password=test123
+```
+
+```properties
+# application-prod.properties
+spring.datasource.url=jdbc:mysql://prod-server/db
+spring.datasource.username=prod
+spring.datasource.password=prod123
+```
+
+Activate a profile in `application.properties`:
+```properties
+spring.profiles.active=dev
+```
+
+---
+
+#### **Option 2: Single File with Profile Sections**
+Use YAML with profile blocks:
+
+```yaml
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+datasource:
+  url: jdbc:h2:mem:devdb
+  username: dev
+  password: dev123
+
+---
+spring:
+  profiles: test
+datasource:
+  url: jdbc:h2:mem:testdb
+  username: test
+  password: test123
+
+---
+spring:
+  profiles: prod
+datasource:
+  url: jdbc:mysql://prod-server/db
+  username: prod
+  password: prod123
+```
+
+---
+
+#### **Option 3: Conditional Beans with `@Profile`**
+```java
+@Configuration
+public class DataSourceConfig {
+
+    @Bean
+    @Profile("dev")
+    public DataSource devDataSource() {
+        return new HikariDataSource(); // dev DB
+    }
+
+    @Bean
+    @Profile("test")
+    public DataSource testDataSource() {
+        return new HikariDataSource(); // test DB
+    }
+
+    @Bean
+    @Profile("prod")
+    public DataSource prodDataSource() {
+        return new HikariDataSource(); // prod DB
+    }
+}
+```
+
+
+### 📊 Real‑World Example
+- **Dev profile** → H2 in‑memory DB for fast local testing.  
+- **Test profile** → Separate test DB for integration tests.  
+- **Prod profile** → MySQL/Postgres with production credentials.  
+
 ## Composite configuration
 - Preferred way is to divide configuration to multiple files and then import them when used
 - Usually based on application layers - web layer, service layer, DAO layer,...
