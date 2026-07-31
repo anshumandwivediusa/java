@@ -107,6 +107,17 @@ easy mocking for unit tests, in memory database vs production one, etc.
     applicationContext.getBean(MyBean.class);
 ```
 
+### Key Features of ApplicationContext
+
+
+| Feature | Description |
+| --- | --- |
+| **Bean Factory** | Manages bean creation and lifecycle |
+| **Dependency Injection** | Injects dependencies automatically |
+| **Event Propagation** | Publishes and listens to application events |
+| **Internationalization** | Supports message sources for i18n |
+| **Environment Access** | Provides property values (``application.properties``) |
+| **Profiles** | Activates beans conditionally (``@Profile``) |
 
 ## Bean Scopes
 - Spring manages lifecycle of beans, each bean has its scope
