@@ -681,6 +681,27 @@ public class ApplicationConfiguration {
 - After application context is closed  
 - Only if JVM exits normally  
 
+```java
+@Component
+public class CacheManager {
+
+    private Map<String, String> cache;
+
+    @PostConstruct
+    public void init() {
+        cache = new HashMap<>();
+        cache.put("default", "value");
+        System.out.println("Cache initialized!");
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        cache.clear();
+        System.out.println("Cache cleared before shutdown!");
+    }
+}
+
+```
 #### Stereotypes and Meta-annotations
 Stereotypes
 - Spring has several annotations, which are themselves annotated by @Component
