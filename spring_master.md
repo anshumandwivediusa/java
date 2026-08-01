@@ -18,6 +18,14 @@
      - **Setter Injection** → Dependencies set via setter methods.  
      - **Method Injection** → Dependencies passed via specific methods.  
 
+
+| Spring Era | Approach | Example |
+| --- | --- | --- |
+| **Spring 3.x** | XML config with ``autowire="constructor"`` | ``<bean ``id="userService" ``class="UserService" ``autowire="constructor"/>`` |
+| **Spring 4.x** | Annotation‑based ``@Autowired`` on constructors | ``@Autowired ``public ``UserService(UserRepository ``repo)`` |
+| **Spring Boot 2+** | Constructor injection is **preferred**; ``@Autowired`` optional if only one constructor | ``public ``UserService(UserRepository ``repo)`` |
+| **Spring Boot 3+** | Same, but with modern DSLs and records support | ``public ``record ``UserService(UserRepository ``repo) ``{}`` |
+
 2. **Dependency Lookup (DL)**  
    - Objects actively look up dependencies from a container/service.  
    - Patterns:  
