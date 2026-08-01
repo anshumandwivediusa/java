@@ -1295,6 +1295,59 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
     - Often based on roles - privileges not assigned to specific users, but to groups
 - **Secured item** - Resource being secured
 
+## **OAuth 2.0, SAML, and JWT**
+
+### OAuth 2.0
+- **Type:** Authorization framework.  
+- **Purpose:** Delegates access — lets a user grant limited access to their resources without sharing credentials.  
+- **Example:** Logging into a third‑party app using Google or Facebook login.  
+- **Flow:**  
+  1. User authenticates with an identity provider (Google).  
+  2. Provider issues an **access token**.  
+  3. The app uses the token to access user data (e.g., profile info).  
+- **Key Point:** OAuth 2.0 is about **delegated authorization**, not authentication by itself.  
+
+### SAML (Security Assertion Markup Language)
+- **Type:** Authentication + Authorization protocol (XML‑based).  
+- **Purpose:** Enables **Single Sign‑On (SSO)** across enterprise applications.  
+- **Example:** Logging into corporate apps (Salesforce, Office 365) with one enterprise login.  
+- **Flow:**  
+  1. User tries to access an app (Service Provider).  
+  2. The app redirects to the Identity Provider (IdP).  
+  3. IdP authenticates the user and sends a **SAML Assertion** (XML document).  
+  4. The app grants access based on the assertion.  
+- **Key Point:** SAML is common in enterprise SSO, especially with older systems.  
+
+### JWT (JSON Web Token)
+- **Type:** Token format (JSON‑based).  
+- **Purpose:** Compact, stateless way to transmit identity and claims.  
+- **Example:** After login, a server issues a JWT; client includes it in headers for subsequent requests.  
+- **Structure:**  
+  - Header (algorithm, type)  
+  - Payload (claims: user, roles, expiry)  
+  - Signature (verifies integrity)  
+- **Key Point:** JWT is often used with OAuth 2.0 or custom auth flows for lightweight, stateless authentication.  
+
+---
+
+## 📊 Comparison Table
+
+| Feature | **OAuth 2.0** | **SAML** | **JWT** |
+|---------|-----------------|-----------------|-----------------|
+| Focus | Delegated authorization | Authentication + SSO | Token format |
+| Format | Tokens (often JWT) | XML assertions | JSON tokens |
+| Use Case | Third‑party login (Google, GitHub) | Enterprise SSO | Stateless API auth |
+| Strength | Delegation, scopes | Enterprise integration | Lightweight, stateless |
+| Weakness | Complex flows | Verbose XML | Token revocation tricky |
+
+---
+
+## ✅ In short
+- **OAuth 2.0** → Delegated authorization (who can access what).  
+- **SAML** → Enterprise SSO (who you are, across apps).  
+- **JWT** → Compact token format (how identity/claims are carried).  
+
+
 ## Configuring Spring Security
 - Annotate your @Configuration with @EnableWebSecurity
 - Your @Configuration should extend WebSecurityConfigurerAdapter
