@@ -1441,6 +1441,27 @@ public class HelloWebSecurityConfiguration extends WebSecurityConfigurerAdapter 
                                       .antMatchers("/public/**").anonymous();
   }
 }
+
+Version 5.7 Above
+
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/css/**","/img/**","/js/**").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/user/profile").hasAnyRole("USER","ADMIN")
+            .requestMatchers("/user/**").authenticated()
+            .requestMatchers("/user/private/**").fullyAuthenticated()
+            .requestMatchers("/public/**").anonymous()
+        )
+        .formLogin()
+        .and()
+        .httpBasic();
+    return http.build();
+}
+
+
 ```
 - Rules are evaluated in the order listed
 - Should be from the most specific to the least specific
