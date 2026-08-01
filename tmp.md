@@ -1281,19 +1281,19 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
 ```
 
 # Spring Security
-- Independent on container - does not require EE container, configured in application and not in container
-- Separated security from business logic
-- Decoupled authorization from authentication
-- Principal - User, device, or system that is performing and action
-- Authentication
-    - Process of checking identity of a principal (credentials are valid)
+- **Independent of Container** - does not require EE container, configured in application and not in container
+- **Separation of Concerns** - Separated security from business logic
+- **Decoupled authorization from authentication**
+- **Principal** - User, device, or system that is performing and action
+- **Authentication**
+    - Process of checking **identity of a principal** (credentials are valid)
     - basic, digest, form, X.509, ...
     - Credentials need to be stored securely
-- Authorization
+- **Authorization**
     - Process of checking a principal has privileges to perform requested action
     - Depends on authentication
     - Often based on roles - privileges not assigned to specific users, but to groups
-- Secured item - Resource being secured
+- **Secured item** - Resource being secured
 
 ## Configuring Spring Security
 - Annotate your @Configuration with @EnableWebSecurity
