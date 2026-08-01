@@ -340,6 +340,36 @@ public class ApplicationConfiguration {
 | **[Environment](ca://s?q=Spring_Boot_Environment_object)** | ``environment.getProperty("server.port")`` | Dynamic property access, conditional logic |
 | **[@ConfigurationProperties](ca://s?q=Spring_Boot_ConfigurationProperties)** | ``@ConfigurationProperties(prefix="myapp")`` | Grouped configs mapped to POJO |
 
+```java
+application.properties
+app:
+  name: MySpringApp
+  security:
+    enabled: true
+    roles:
+      - ADMIN
+      - USER
+
+Code::
+
+@Component
+@ConfigurationProperties(prefix = "app")
+public class AppProperties {
+
+    private String name;
+    private Security security;
+
+    // nested class for hierarchical properties
+    public static class Security {
+        private boolean enabled;
+        private List<String> roles;
+
+        // getters and setters
+    }
+
+    // getters and setters
+}
+```
 #### Spring Expression language
 - Acronym SpEL
 - can be used in @Value annotation values
