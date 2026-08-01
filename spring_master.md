@@ -26,6 +26,24 @@
 | **Spring Boot 2+** | Constructor injection is **preferred**; ``@Autowired`` optional if only one constructor | ``public ``UserService(UserRepository ``repo)`` |
 | **Spring Boot 3+** | Same, but with modern DSLs and records support | ``public ``record ``UserService(UserRepository ``repo) ``{}`` |
 
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    // Constructor-based autowiring
+    @Autowired   // optional if only one constructor
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public String getUserName(Long id) {
+        return userRepository.findById(id).getUsername();
+    }
+}
+```
+
 2. **Dependency Lookup (DL)**  
    - Objects actively look up dependencies from a container/service.  
    - Patterns:  
