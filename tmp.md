@@ -1295,6 +1295,51 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
     - Often based on roles - privileges not assigned to specific users, but to groups
 - **Secured item** - Resource being secured
 
+## Spring Security Architecture
+
+ <p>
+   <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/ab494d80-b82d-46f3-87b3-dbeee4e9efcc" />
+</p>
+
+_Spring Security Authentication Flow Notes_
+
+1. **User Entered Credentials**  
+   - The principal (user, device, or system) submits login details (username/password, token, certificate).
+
+2. **Authentication**  
+   - Credentials are wrapped into an `Authentication` object (e.g., `UsernamePasswordAuthenticationToken`).
+
+3. **Authentication Filter**  
+   - Intercepts the request, extracts credentials, and passes them to the authentication manager.
+
+4. **Authentication Manager**  
+   - Delegates authentication to one or more providers. It’s the central decision point.
+
+5. **Authentication Provider**  
+   - Validates credentials. Example: `DaoAuthenticationProvider` checks against a database.
+
+6. **UserDetailsService**  
+   - Loads user data (username, roles, password hash) from a persistent store.
+
+7. **PasswordEncoder**  
+   - Compares raw password with stored hash (e.g., BCrypt, PBKDF2).
+
+8. **Authentication Manager (return)**  
+   - Returns a fully authenticated `Authentication` object if validation succeeds.
+
+9. **SecurityContext**  
+   - Stores the authenticated principal in `SecurityContextHolder` for future requests.
+
+10. **User Credentials (return path)**  
+   - Authentication result is returned; the user is now logged in and can access secured items.
+
+## 📊 Summary
+- **Authentication** → Verifies identity (steps 1–8).  
+- **Authorization** → Uses roles/authorities stored in the `SecurityContext` (step 9 onward).  
+- **Secured Item** → Any resource (endpoint, method, file) protected by Spring Security.  
+
+
+
 ## **OAuth 2.0, SAML, and JWT**
 
 ### OAuth 2.0
