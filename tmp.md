@@ -1328,9 +1328,7 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
   - Signature (verifies integrity)  
 - **Key Point:** JWT is often used with OAuth 2.0 or custom auth flows for lightweight, stateless authentication.  
 
----
-
-## 📊 Comparison Table
+### 📊 Comparison Table
 
 | Feature | **OAuth 2.0** | **SAML** | **JWT** |
 |---------|-----------------|-----------------|-----------------|
@@ -1340,9 +1338,7 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
 | Strength | Delegation, scopes | Enterprise integration | Lightweight, stateless |
 | Weakness | Complex flows | Verbose XML | Token revocation tricky |
 
----
-
-## ✅ In short
+### ✅ In short
 - **OAuth 2.0** → Delegated authorization (who can access what).  
 - **SAML** → Enterprise SSO (who you are, across apps).  
 - **JWT** → Compact token format (how identity/claims are carried).  
@@ -1351,6 +1347,7 @@ restTemplate.getForObject("http://persons-microservice-name/persons/{id}", Perso
 ## Configuring Spring Security
 - Annotate your @Configuration with @EnableWebSecurity
 - Your @Configuration should extend WebSecurityConfigurerAdapter
+
 ```java
 @Configuration
 @EnableWebSecurity
@@ -1540,6 +1537,98 @@ Login JSP Form
 - Post authorize - can use SpEL, checked after annotated method invocation, can access return object of the method using returnObject variable in SPEL; If expression resolves to false, return value is not returned to caller
 - `@PreAuthorize("hasRole('ROLE_ADMIN')")`
 
+## OAuth 2.0 with Microsoft Entra ID
+**To enable OAuth 2.0 with Microsoft Entra ID (formerly Azure AD) for a Spring Boot REST API, you register your app in Entra ID, configure redirect URIs and permissions, then use the Spring Cloud Azure Starter (`spring-cloud-azure-starter-active-directory`) to secure endpoints with Spring Security.** This integrates Entra ID as the identity provider, issuing JWT access tokens that your API validates.  [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/java/spring-framework/spring-boot-starter-for-entra-developer-guide)  [Github](https://github.com/azure-samples/azure-spring-boot-samples/blob/main/aad/spring-cloud-azure-starter-active-directory/web-client-access-resource-server/aad-web-application/README.md)  [Github](https://github.com/Azure-Samples/ms-identity-msal-java-samples/blob/main/4-spring-web-app/3-Authorization-II/protect-web-api/README.md)
+
+### 📌 Step‑by‑Step Setup
+
+#### 1. **Register Application in Microsoft Entra ID**
+- Go to **Azure Portal → Microsoft Entra ID → App registrations → New registration**.  
+- Choose **Accounts in this organizational directory only** (single tenant).  
+- Set **Redirect URI** → `http://localhost:8080/login/oauth2/code/`.  
+- Save the **Application (client) ID** and **Directory (tenant) ID**.  
+- Create a **Client Secret** under *Certificates & Secrets*.  
+
+
+
+#### 2. **Configure API Permissions**
+- Add **Microsoft Graph → User.Read** (default).  
+- Add additional permissions like `Directory.Read.All` or custom API scopes if needed.  
+- Grant admin consent for the tenant.  
+
+
+
+#### 3. **Spring Boot Dependencies**
+Add the starter in `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>com.azure.spring</groupId>
+  <artifactId>spring-cloud-azure-starter-active-directory</artifactId>
+</dependency>
+```
+
+
+
+#### 4. **application.yml Configuration**
+```yaml
+spring:
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: <TENANT_ID>
+        credential:
+          client-id: <CLIENT_ID>
+          client-secret: <CLIENT_SECRET>
+        app-id-uri: api://<CLIENT_ID>
+        redirect-uri: http://localhost:8080/login/oauth2/code/
+```
+
+
+
+#### 5. **Spring Security Configuration**
+```java
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+          .authorizeRequests()
+            .antMatchers("/public/**").permitAll()
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .anyRequest().authenticated()
+          .and()
+          .oauth2Login()   // For web login
+          .and()
+          .oauth2ResourceServer()
+            .jwt();        // For REST API token validation
+    }
+}
+```
+
+#### 6. **Access Flow**
+- User logs in → redirected to Microsoft Entra ID.  
+- Entra ID authenticates and issues **JWT access token**.  
+- Spring Security validates token signature and claims.  
+- API grants or denies access based on roles/permissions.  
+
+#### 📊 Key Benefits
+| Feature | OAuth 2.0 + Entra ID |
+|---------|----------------------|
+| **Authentication** | Secure login via Microsoft identity platform |
+| **Authorization** | Role/claim‑based access control |
+| **Token Format** | JWT (stateless, signed) |
+| **Integration** | Works with Spring Security filters |
+| **Scalability** | Supports multi‑tenant and enterprise SSO |
+
+#### ✅ In short:  
+- Register your app in **Microsoft Entra ID**.  
+- Configure **redirect URI, client ID/secret, and permissions**.  
+- Use **Spring Cloud Azure Starter** with Spring Security to validate JWT tokens.  
+- Protect REST endpoints with role‑based authorization.  
 
 # Spring Web
 - Provides several web modules 
