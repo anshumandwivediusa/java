@@ -562,6 +562,12 @@ Autowired resolution sequence
 When a bean name is not specified, one is auto-generated: De-capitalized non-qualified class name
 
 
+
+| Annotation | Bean Name | Notes |
+| --- | --- | --- |
+| **[@Component("myOtherDependency")](ca://s?q=Spring_Component_annotation)** | ``"myOtherDependency"`` | Matches Spring’s default naming convention (camelCase, lowercase first letter). Easier to autowire without confusion. |
+| **@Component("MyOtherDependency")** | ``"MyOtherDependency"`` | Bean name starts with uppercase. Works fine, but unusual — can cause confusion if you expect Spring’s default lowercase naming. |
+
 #### Explicit bean declaration
 - Class is explicitly marked as spring managed bean in @Configuration class (similar concept is in XML config)
 - All settings of the bean are present in the @Configuration class in the bean declaration
