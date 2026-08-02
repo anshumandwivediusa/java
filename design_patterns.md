@@ -373,3 +373,139 @@ public class AbstractFactoryDemo {
 | **Benefit** | Ensures consistency among related objects |
 | **Use Case** | UI themes (buttons, text fields), payment systems, cross-platform toolkits |
 | **Drawback** | Can add complexity with multiple factories |
+
+
+## 4. Builder Design Pattern
+
+- **Definition**  
+  Separates the construction of a complex object from its representation, allowing the same construction process to create different representations.
+
+- **Core Idea**  
+  Step-by-step object creation where the client doesn’t need to know the details of how the object is built.
+
+- **Key Traits**  
+  - Encapsulation of construction logic  
+  - Flexible and reusable for different object configurations  
+  - Simplifies creation of complex objects  
+
+- **Purpose**  
+  To construct complex objects (with many optional parameters) in a controlled and readable way.
+
+#### Java Example (Bank Account Builder)
+
+```java
+// Product
+class BankAccount {
+    private String accountNumber;
+    private String owner;
+    private boolean hasCreditCard;
+    private boolean hasDebitCard;
+
+    // Private constructor
+    private BankAccount(Builder builder) {
+        this.accountNumber = builder.accountNumber;
+        this.owner = builder.owner;
+        this.hasCreditCard = builder.hasCreditCard;
+        this.hasDebitCard = builder.hasDebitCard;
+    }
+
+    // Static Builder class
+    public static class Builder {
+        private String accountNumber;
+        private String owner;
+        private boolean hasCreditCard;
+        private boolean hasDebitCard;
+
+        public Builder(String accountNumber, String owner) {
+            this.accountNumber = accountNumber;
+            this.owner = owner;
+        }
+
+        public Builder withCreditCard() {
+            this.hasCreditCard = true;
+            return this;
+        }
+
+        public Builder withDebitCard() {
+            this.hasDebitCard = true;
+            return this;
+        }
+
+        public BankAccount build() {
+            return new BankAccount(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "BankAccount [accountNumber=" + accountNumber +
+               ", owner=" + owner +
+               ", CreditCard=" + hasCreditCard +
+               ", DebitCard=" + hasDebitCard + "]";
+    }
+}
+
+// Client
+public class BuilderPatternDemo {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount.Builder("12345", "Anshuman")
+                                .withCreditCard()
+                                .withDebitCard()
+                                .build();
+
+        System.out.println(account);
+    }
+}
+```
+
+#### 🌱 Builder Pattern in Spring Boot
+
+##### 1. Using Lombok’s `@Builder`
+Spring developers frequently use **Lombok** to reduce boilerplate code.
+
+```java
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class BankAccount {
+    private String accountNumber;
+    private String owner;
+    private boolean hasCreditCard;
+    private boolean hasDebitCard;
+}
+```
+
+##### 2. Creating Objects with Builder
+```java
+public class BuilderDemo {
+    public static void main(String[] args) {
+        BankAccount account = BankAccount.builder()
+                .accountNumber("12345")
+                .owner("Anshuman")
+                .hasCreditCard(true)
+                .hasDebitCard(true)
+                .build();
+
+        System.out.println(account);
+    }
+}
+```
+
+##### 3. Builder in a Spring Service
+```java
+import org.springframework.stereotype.Service;
+
+@Service
+public class AccountService {
+    public BankAccount createPremiumAccount(String accountNumber, String owner) {
+        return BankAccount.builder()
+                .accountNumber(accountNumber)
+                .owner(owner)
+                .hasCreditCard(true)
+                .hasDebitCard(true)
+                .build();
+    }
+}
+```
