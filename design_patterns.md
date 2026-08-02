@@ -107,8 +107,87 @@ public class DatabaseConnection {
 - **Explicit Scope Control**  
   If you want to override, you can use `@Scope("prototype")` for new instances each time. But for Singleton, the default is sufficient.
 
-## ✅ Benefits in Spring Context
+#### ✅ Benefits in Spring Context
 - No need to manually implement Singleton logic (private constructor, static instance).  
 - Spring manages lifecycle, thread-safety, and dependency injection.  
 - Cleaner, testable code compared to manual Singleton implementations.
 
+### 2. Factory Design Pattern
+
+- **Definition**  
+  Provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created. It encapsulates object creation logic.
+
+- **Core Idea**  
+  Delegate instantiation to a factory class/method instead of directly using `new`. This promotes loose coupling and flexibility.
+
+- **Key Traits**  
+  - Encapsulation of object creation  
+  - Decouples client code from concrete classes  
+  - Promotes reusability and scalability  
+
+- **Purpose**  
+  Control and centralize object creation, especially when dealing with complex or varying object types.
+
+- **Examples**  
+  - GUI frameworks (creating buttons, text fields depending on OS)  
+  - Document parsers (XML, JSON, CSV)  
+  - Notification services (Email, SMS, Push)  
+
+- **Focus**  
+  *How to create families of related objects without specifying their concrete classes.*
+
+- **Benefits**  
+  - Simplifies object creation logic  
+  - Improves maintainability and scalability  
+  - Encourages adherence to **Open/Closed Principle**  
+
+- **Use Cases**  
+  - When the exact type of object isn’t known until runtime  
+  - When you want to centralize creation logic  
+  - When multiple related classes share a common interface  
+
+- **Drawbacks**  
+  - Can introduce extra complexity  
+  - May lead to too many factory classes if not managed well  
+
+#### 💻 Java Example (Factory Method)
+
+```java
+// Product interface
+interface Notification {
+    void notifyUser();
+}
+
+// Concrete products
+class EmailNotification implements Notification {
+    public void notifyUser() {
+        System.out.println("Sending an Email notification");
+    }
+}
+
+class SMSNotification implements Notification {
+    public void notifyUser() {
+        System.out.println("Sending an SMS notification");
+    }
+}
+
+// Factory
+class NotificationFactory {
+    public static Notification createNotification(String type) {
+        if (type.equalsIgnoreCase("EMAIL")) {
+            return new EmailNotification();
+        } else if (type.equalsIgnoreCase("SMS")) {
+            return new SMSNotification();
+        }
+        throw new IllegalArgumentException("Unknown notification type");
+    }
+}
+
+// Client
+public class FactoryPatternDemo {
+    public static void main(String[] args) {
+        Notification notification = NotificationFactory.createNotification("EMAIL");
+        notification.notifyUser();
+    }
+}
+```
