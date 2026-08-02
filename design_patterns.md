@@ -284,3 +284,92 @@ public class CardService {
 }
 ```
 
+## 3. Abstract Factory
+
+#### Abstract Factory Pattern
+
+- **Definition**  
+  Provides an interface for creating **families of related or dependent objects** without specifying their concrete classes.
+
+- **Core Idea**  
+  Instead of creating individual objects directly, you use a factory that produces **factories** — each factory creates a set of related objects.
+
+- **Key Traits**  
+  - Encapsulates multiple factories  
+  - Ensures consistency among related objects  
+  - Promotes scalability and loose coupling  
+
+- **Purpose**  
+  To create families of related objects (e.g., UI components, payment methods) that must work together, without exposing instantiation details.
+
+#### Java Example (Credit Card vs Debit Card Families)
+
+```java
+// Product interfaces
+interface Card {
+    String getCardType();
+}
+
+interface PaymentProcessor {
+    void processPayment(double amount);
+}
+
+// Concrete products for Credit
+class CreditCard implements Card {
+    public String getCardType() { return "Credit Card"; }
+}
+class CreditPaymentProcessor implements PaymentProcessor {
+    public void processPayment(double amount) {
+        System.out.println("Processing credit payment of $" + amount);
+    }
+}
+
+// Concrete products for Debit
+class DebitCard implements Card {
+    public String getCardType() { return "Debit Card"; }
+}
+class DebitPaymentProcessor implements PaymentProcessor {
+    public void processPayment(double amount) {
+        System.out.println("Processing debit payment of $" + amount);
+    }
+}
+
+// Abstract Factory
+interface CardFactory {
+    Card createCard();
+    PaymentProcessor createProcessor();
+}
+
+// Concrete Factories
+class CreditCardFactory implements CardFactory {
+    public Card createCard() { return new CreditCard(); }
+    public PaymentProcessor createProcessor() { return new CreditPaymentProcessor(); }
+}
+
+class DebitCardFactory implements CardFactory {
+    public Card createCard() { return new DebitCard(); }
+    public PaymentProcessor createProcessor() { return new DebitPaymentProcessor(); }
+}
+
+// Client
+public class AbstractFactoryDemo {
+    public static void main(String[] args) {
+        CardFactory factory = new CreditCardFactory(); // or new DebitCardFactory()
+        Card card = factory.createCard();
+        PaymentProcessor processor = factory.createProcessor();
+
+        System.out.println("Created: " + card.getCardType());
+        processor.processPayment(1000.0);
+    }
+}
+```
+
+#### Conceptual Notes
+
+| **Aspect** | **Abstract Factory** |
+|------------|-----------------------|
+| **Scope** | Creates families of related objects |
+| **Example** | CreditCard + CreditPaymentProcessor, DebitCard + DebitPaymentProcessor |
+| **Benefit** | Ensures consistency among related objects |
+| **Use Case** | UI themes (buttons, text fields), payment systems, cross-platform toolkits |
+| **Drawback** | Can add complexity with multiple factories |
