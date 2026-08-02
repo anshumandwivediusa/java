@@ -938,5 +938,98 @@ public class BridgeDemo {
 | **Drawback** | Adds extra layers, may feel complex for small systems |
 
 
+Here’s a clear and practical explanation of the **Observer Design Pattern**:
 
-Would you like me to also show a **UML diagram of the Adapter pattern** (Target interface → Adapter → Legacy class) so you can visually see how the bridging works?
+---
+
+## 👀 Observer Design Pattern
+
+- **Definition**  
+  Defines a **one-to-many dependency** between objects so that when one object (the subject) changes state, all its dependents (observers) are notified automatically.
+
+- **Core Idea**  
+  Instead of constantly checking for changes, observers “subscribe” to a subject and get updates when something changes.
+
+- **Key Traits**  
+  - Subject maintains a list of observers  
+  - Observers register/unregister themselves  
+  - Subject notifies observers when state changes  
+
+- **Purpose**  
+  To implement event-driven systems where multiple objects need to react to changes in another object.
+
+---
+
+### 💻 Java Example (Bank Account Notifications)
+
+```java
+// Observer interface
+interface Observer {
+    void update(String message);
+}
+
+// Concrete observers
+class EmailNotifier implements Observer {
+    @Override
+    public void update(String message) {
+        System.out.println("Email notification: " + message);
+    }
+}
+
+class SMSNotifier implements Observer {
+    @Override
+    public void update(String message) {
+        System.out.println("SMS notification: " + message);
+    }
+}
+
+// Subject
+class BankAccount {
+    private List<Observer> observers = new ArrayList<>();
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void deposit(double amount) {
+        System.out.println("Deposited $" + amount);
+        notifyObservers("Deposit of $" + amount + " successful.");
+    }
+
+    private void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+}
+
+// Client
+public class ObserverDemo {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+
+        account.addObserver(new EmailNotifier());
+        account.addObserver(new SMSNotifier());
+
+        account.deposit(1000.0);
+    }
+}
+```
+
+## 📊 Conceptual Notes
+
+| **Aspect** | **Observer Pattern** |
+|------------|-----------------------|
+| **Scope** | One-to-many dependency |
+| **Example** | BankAccount notifying Email/SMS observers |
+| **Benefit** | Decouples subject from observers, flexible event handling |
+| **Use Case** | Event listeners, UI frameworks, messaging systems |
+| **Drawback** | Can lead to unexpected updates if too many observers |
+
+
+
+
