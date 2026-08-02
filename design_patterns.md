@@ -509,3 +509,85 @@ public class AccountService {
     }
 }
 ```
+
+## Prototype Design Pattern
+
+- **Definition**  
+  Specifies the kinds of objects to create using a **prototype instance**, and creates new objects by **cloning** this prototype.
+
+- **Core Idea**  
+  Instead of instantiating new objects directly, you copy (clone) an existing object. This is useful when object creation is costly or complex.
+
+- **Key Traits**  
+  - Uses cloning instead of `new`  
+  - Reduces overhead of creating complex objects  
+  - Supports deep and shallow copies  
+
+- **Purpose**  
+  To create new objects by duplicating existing ones, ensuring efficiency and consistency.
+
+
+#### 💻 Java Example (Card Prototype)
+
+```java
+// Prototype interface
+interface Card extends Cloneable {
+    Card clone();
+    void showDetails();
+}
+
+// Concrete prototype: CreditCard
+class CreditCard implements Card {
+    private String limit;
+
+    public CreditCard(String limit) {
+        this.limit = limit;
+    }
+
+    @Override
+    public Card clone() {
+        return new CreditCard(this.limit);
+    }
+
+    @Override
+    public void showDetails() {
+        System.out.println("Credit Card with limit: " + limit);
+    }
+}
+
+// Concrete prototype: DebitCard
+class DebitCard implements Card {
+    private String linkedAccount;
+
+    public DebitCard(String linkedAccount) {
+        this.linkedAccount = linkedAccount;
+    }
+
+    @Override
+    public Card clone() {
+        return new DebitCard(this.linkedAccount);
+    }
+
+    @Override
+    public void showDetails() {
+        System.out.println("Debit Card linked to account: " + linkedAccount);
+    }
+}
+
+// Client
+public class PrototypeDemo {
+    public static void main(String[] args) {
+        CreditCard credit = new CreditCard("$5000");
+        CreditCard clonedCredit = (CreditCard) credit.clone();
+
+        DebitCard debit = new DebitCard("Account#12345");
+        DebitCard clonedDebit = (DebitCard) debit.clone();
+
+        credit.showDetails();
+        clonedCredit.showDetails();
+
+        debit.showDetails();
+        clonedDebit.showDetails();
+    }
+}
+```
