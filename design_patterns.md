@@ -76,8 +76,39 @@ public class DatabaseConnection {
 }
 ```
 
----
+#### Singleton in Spring Boot
 
-This pattern is often the **first creational pattern** developers learn, but it should be used carefully to avoid over-reliance on global state.  
+- **Default Behavior**  
+  In Spring, all beans are **singleton-scoped by default**. That means when you annotate a class with `@Component`, `@Service`, or `@Repository`, Spring creates **one instance per ApplicationContext** and reuses it.
 
-👉 Would you like me to extend this into a **Spring Boot example** (e.g., using `@Bean` or `@Component` which are singletons by default in the Spring IoC container)? That would connect directly to your microservices and Spring expertise.
+- **Using @Component**  
+  ```java
+  @Component
+  public class LoggerService {
+      public void log(String message) {
+          System.out.println("LOG: " + message);
+      }
+  }
+  ```
+  - Spring ensures only one `LoggerService` instance exists in the context.
+
+- **Using @Bean**  
+  ```java
+  @Configuration
+  public class AppConfig {
+      @Bean
+      public DatabaseConnection databaseConnection() {
+          return new DatabaseConnection();
+      }
+  }
+  ```
+  - The `@Bean` method returns a singleton-managed instance by default.
+
+- **Explicit Scope Control**  
+  If you want to override, you can use `@Scope("prototype")` for new instances each time. But for Singleton, the default is sufficient.
+
+## ✅ Benefits in Spring Context
+- No need to manually implement Singleton logic (private constructor, static instance).  
+- Spring manages lifecycle, thread-safety, and dependency injection.  
+- Cleaner, testable code compared to manual Singleton implementations.
+
