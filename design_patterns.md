@@ -191,3 +191,96 @@ public class FactoryPatternDemo {
     }
 }
 ```
+
+Here’s how the **Factory Pattern** can be implemented in a **Spring Boot context** using Credit Card and Debit Card as examples:
+
+##### 1. Define the Product Interface
+```java
+public interface Card {
+    String getCardType();
+    String getLimit();
+}
+```
+
+##### 2. Create Concrete Implementations
+```java
+import org.springframework.stereotype.Component;
+
+@Component
+public class CreditCard implements Card {
+    @Override
+    public String getCardType() {
+        return "Credit Card";
+    }
+
+    @Override
+    public String getLimit() {
+        return "Credit limit: $5000";
+    }
+}
+
+@Component
+public class DebitCard implements Card {
+    @Override
+    public String getCardType() {
+        return "Debit Card";
+    }
+
+    @Override
+    public String getLimit() {
+        return "Linked to bank account balance";
+    }
+}
+```
+
+##### 3. Implement the Factory
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CardFactory {
+
+    private final CreditCard creditCard;
+    private final DebitCard debitCard;
+
+    @Autowired
+    public CardFactory(CreditCard creditCard, DebitCard debitCard) {
+        this.creditCard = creditCard;
+        this.debitCard = debitCard;
+    }
+
+    public Card getCard(String type) {
+        if ("CREDIT".equalsIgnoreCase(type)) {
+            return creditCard;
+        } else if ("DEBIT".equalsIgnoreCase(type)) {
+            return debitCard;
+        }
+        throw new IllegalArgumentException("Unknown card type: " + type);
+    }
+}
+```
+
+##### 4. Use in a Service or Controller
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CardService {
+
+    private final CardFactory cardFactory;
+
+    @Autowired
+    public CardService(CardFactory cardFactory) {
+        this.cardFactory = cardFactory;
+    }
+
+    public void showCardDetails(String type) {
+        Card card = cardFactory.getCard(type);
+        System.out.println("Card Type: " + card.getCardType());
+        System.out.println("Limit: " + card.getLimit());
+    }
+}
+```
+
