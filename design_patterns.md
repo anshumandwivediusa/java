@@ -591,3 +591,352 @@ public class PrototypeDemo {
     }
 }
 ```
+
+
+
+
+Got it — let’s connect the **Adapter design pattern** to the examples we’ve been discussing (inner classes, composition, aggregation).  
+
+---
+
+## 🔑 Adapter Pattern Recap
+- **Adapter** is a **structural design pattern**.  
+- It allows incompatible interfaces to work together by acting as a **bridge**.  
+- Think of it as: *“I have a plug that doesn’t fit the socket, so I use an adapter.”*  
+
+---
+
+## 📝 Example with Composition (strong relationship)
+Suppose we have a legacy `LineItem` class, but our new system expects an `OrderItem` interface. Instead of rewriting everything, we use an **Adapter**.
+
+```java
+// Target interface expected by new system
+interface OrderItem {
+    String getProductName();
+    int getQuantity();
+}
+
+// Legacy class (incompatible interface)
+class LineItem {
+    private String product;
+    private int qty;
+
+    public LineItem(String product, int qty) {
+        this.product = product;
+        this.qty = qty;
+    }
+
+    public String getItemName() { return product; }
+    public int getItemCount() { return qty; }
+}
+
+// Adapter class using composition
+class LineItemAdapter implements OrderItem {
+    private LineItem lineItem; // composition
+
+    public LineItemAdapter(LineItem lineItem) {
+        this.lineItem = lineItem;
+    }
+
+    @Override
+    public String getProductName() {
+        return lineItem.getItemName();
+    }
+
+    @Override
+    public int getQuantity() {
+        return lineItem.getItemCount();
+    }
+}
+
+public class AdapterDemo {
+    public static void main(String[] args) {
+        LineItem legacyItem = new LineItem("Laptop", 2);
+
+        // Adapt legacy object to new interface
+        OrderItem adapted = new LineItemAdapter(legacyItem);
+
+        System.out.println(adapted.getProductName() + " x " + adapted.getQuantity());
+    }
+}
+```
+
+
+## ✅ Notes on Design
+- The **Adapter** uses **composition** (`LineItemAdapter` contains a `LineItem`).  
+- This makes the relationship strong: the adapter *owns* the legacy object.  
+- The adapter translates method calls from the new interface (`OrderItem`) into the old one (`LineItem`).  
+- This avoids rewriting legacy code and provides **polymorphism** in the new system.  
+
+---
+
+Here are **section notes on the Decorator Design Pattern**, explained in a simple and practical way:
+
+---
+
+## 🎨 Decorator Design Pattern
+
+- **Definition**  
+  Allows you to **add new behavior or responsibilities** to objects dynamically, without modifying their existing code.
+
+- **Core Idea**  
+  Wrap an object inside another object (the decorator) that adds extra functionality.  
+
+- **Key Traits**  
+  - Follows **composition over inheritance**  
+  - Enhances objects at runtime  
+  - Keeps original class unchanged  
+
+- **Purpose**  
+  To extend functionality of objects flexibly, without creating endless subclasses.
+
+---
+
+### 💻 Java Example (Payment Decorator)
+
+```java
+// Component interface
+interface Payment {
+    void pay(double amount);
+}
+
+// Concrete component
+class CreditCardPayment implements Payment {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid $" + amount + " using Credit Card");
+    }
+}
+
+// Decorator base class
+abstract class PaymentDecorator implements Payment {
+    protected Payment decoratedPayment;
+
+    public PaymentDecorator(Payment decoratedPayment) {
+        this.decoratedPayment = decoratedPayment;
+    }
+
+    @Override
+    public void pay(double amount) {
+        decoratedPayment.pay(amount);
+    }
+}
+
+// Concrete decorator: adds logging
+class LoggingPaymentDecorator extends PaymentDecorator {
+    public LoggingPaymentDecorator(Payment decoratedPayment) {
+        super(decoratedPayment);
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("[LOG] Payment started...");
+        super.pay(amount);
+        System.out.println("[LOG] Payment finished.");
+    }
+}
+
+// Client
+public class DecoratorDemo {
+    public static void main(String[] args) {
+        Payment payment = new LoggingPaymentDecorator(new CreditCardPayment());
+        payment.pay(1000.0);
+    }
+}
+```
+
+---
+
+## 📊 Conceptual Notes
+
+| **Aspect** | **Decorator Pattern** |
+|------------|------------------------|
+| **Scope** | Adds responsibilities dynamically |
+| **Example** | Logging added to CreditCardPayment |
+| **Benefit** | Flexible, reusable, avoids subclass explosion |
+| **Use Case** | Logging, encryption, compression, validation |
+| **Drawback** | Can lead to many small classes (complexity) |
+
+---
+
+Here are **section notes on the Facade Design Pattern**, explained in a simple and practical way:
+
+---
+
+## 🏢 Facade Design Pattern
+
+- **Definition**  
+  Provides a **unified, simplified interface** to a set of complex subsystems.  
+
+- **Core Idea**  
+  Instead of dealing with multiple complicated classes, the client interacts with a single **Facade class** that delegates work internally.  
+
+- **Key Traits**  
+  - Simplifies usage of complex systems  
+  - Hides internal details from the client  
+  - Promotes loose coupling  
+
+- **Purpose**  
+  To make a system easier to use by exposing only the necessary functionality through a single entry point.
+
+---
+
+### 💻 Java Example (Banking System Facade)
+
+```java
+// Subsystems
+class AccountService {
+    public void createAccount(String owner) {
+        System.out.println("Account created for: " + owner);
+    }
+}
+
+class PaymentService {
+    public void makePayment(double amount) {
+        System.out.println("Payment of $" + amount + " processed");
+    }
+}
+
+class NotificationService {
+    public void sendNotification(String message) {
+        System.out.println("Notification: " + message);
+    }
+}
+
+// Facade
+class BankingFacade {
+    private AccountService accountService;
+    private PaymentService paymentService;
+    private NotificationService notificationService;
+
+    public BankingFacade() {
+        this.accountService = new AccountService();
+        this.paymentService = new PaymentService();
+        this.notificationService = new NotificationService();
+    }
+
+    public void openAccountAndPay(String owner, double amount) {
+        accountService.createAccount(owner);
+        paymentService.makePayment(amount);
+        notificationService.sendNotification("Account opened and payment done for " + owner);
+    }
+}
+
+// Client
+public class FacadeDemo {
+    public static void main(String[] args) {
+        BankingFacade facade = new BankingFacade();
+        facade.openAccountAndPay("Anshuman", 1000.0);
+    }
+}
+```
+
+---
+
+## 📊 Conceptual Notes
+
+| **Aspect** | **Facade Pattern** |
+|------------|---------------------|
+| **Scope** | Simplifies interaction with complex subsystems |
+| **Example** | BankingFacade wraps Account, Payment, Notification services |
+| **Benefit** | Cleaner client code, hides complexity |
+| **Use Case** | APIs, libraries, frameworks, microservices |
+| **Drawback** | May hide too much functionality if not designed carefully |
+
+---
+
+Here are **section notes on the Bridge Design Pattern**, explained in a simple and practical way:
+
+---
+
+## 🌉 Bridge Design Pattern
+
+- **Definition**  
+  Decouples an abstraction from its implementation so that the two can vary independently.  
+
+- **Core Idea**  
+  Instead of binding an abstraction tightly to one implementation, you “bridge” them with composition. This allows you to change either side without affecting the other.  
+
+- **Key Traits**  
+  - Promotes flexibility by separating abstraction and implementation  
+  - Uses composition rather than inheritance  
+  - Makes code easier to extend  
+
+- **Purpose**  
+  To avoid a rigid hierarchy and allow both abstraction and implementation to evolve separately.
+
+---
+
+### 💻 Java Example (Payment System)
+
+```java
+// Implementor interface
+interface PaymentSystem {
+    void processPayment(double amount);
+}
+
+// Concrete implementors
+class UPPaymentSystem implements PaymentSystem {
+    @Override
+    public void processPayment(double amount) {
+        System.out.println("Processing payment via UPI: $" + amount);
+    }
+}
+
+class CreditCardPaymentSystem implements PaymentSystem {
+    @Override
+    public void processPayment(double amount) {
+        System.out.println("Processing payment via Credit Card: $" + amount);
+    }
+}
+
+// Abstraction
+abstract class Payment {
+    protected PaymentSystem paymentSystem;
+
+    public Payment(PaymentSystem paymentSystem) {
+        this.paymentSystem = paymentSystem;
+    }
+
+    public abstract void makePayment(double amount);
+}
+
+// Refined Abstraction
+class OnlinePayment extends Payment {
+    public OnlinePayment(PaymentSystem paymentSystem) {
+        super(paymentSystem);
+    }
+
+    @Override
+    public void makePayment(double amount) {
+        System.out.println("Initiating online payment...");
+        paymentSystem.processPayment(amount);
+    }
+}
+
+// Client
+public class BridgeDemo {
+    public static void main(String[] args) {
+        Payment onlinePayment1 = new OnlinePayment(new UPPaymentSystem());
+        onlinePayment1.makePayment(500.0);
+
+        Payment onlinePayment2 = new OnlinePayment(new CreditCardPaymentSystem());
+        onlinePayment2.makePayment(1000.0);
+    }
+}
+```
+
+
+## 📊 Conceptual Notes
+
+| **Aspect** | **Bridge Pattern** |
+|------------|---------------------|
+| **Scope** | Separates abstraction from implementation |
+| **Example** | Payment abstraction + UPI/CreditCard implementations |
+| **Benefit** | Both sides can evolve independently |
+| **Use Case** | Payment systems, device drivers, UI themes |
+| **Drawback** | Adds extra layers, may feel complex for small systems |
+
+
+
+Would you like me to also show a **UML diagram of the Adapter pattern** (Target interface → Adapter → Legacy class) so you can visually see how the bridging works?
