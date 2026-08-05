@@ -522,10 +522,12 @@ public class DataSourceConfig {
 - Can import other config files in java config using @Import annotation
 ```java
 @Configuration
-@Import({WebConfiguration.class, InfrastructureConfiguration})
+@Import({WebConfiguration.class, InfrastructureConfiguration.class})
 public class ApplicationConfiguration {
-    //Config here
+    // Config here
 }
+
+
 
 ```
 - Beans defined in another @Configuration file can be injected using @Autowired annotation on field or setter level, cannot use constructors here
