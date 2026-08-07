@@ -18,31 +18,41 @@
      - **Setter Injection** → Dependencies set via setter methods.  
      - **Method Injection** → Dependencies passed via specific methods.  
 
-
-| Spring Era | Approach | Example |
-| --- | --- | --- |
-| **Spring 3.x** | XML config with ``autowire="constructor"`` | ``<bean ``id="userService" ``class="UserService" ``autowire="constructor"/>`` |
-| **Spring 4.x** | Annotation‑based ``@Autowired`` on constructors | ``@Autowired ``public ``UserService(UserRepository ``repo)`` |
-| **Spring Boot 2+** | Constructor injection is **preferred**; ``@Autowired`` optional if only one constructor | ``public ``UserService(UserRepository ``repo)`` |
-| **Spring Boot 3+** | Same, but with modern DSLs and records support | ``public ``record ``UserService(UserRepository ``repo) ``{}`` |
-
-```java
-@Service
-public class UserService {
-
-    private final UserRepository userRepository;
-
-    // Constructor-based autowiring
-    @Autowired   // optional if only one constructor
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public String getUserName(Long id) {
-        return userRepository.findById(id).getUsername();
-    }
-}
-```
+      ```java
+      import org.springframework.beans.factory.annotation.Autowired;
+      import org.springframework.stereotype.Component;
+      
+      @Component
+      public class ProductService {
+      
+         // Field Injection → dependency injected directly into the field
+         @Autowired
+         private DiscountService discountService;
+         
+         private final ProductRepository productRepository;
+         private LoggerService loggerService;
+         
+         // Constructor Injection → mandatory dependency
+         @Autowired
+         public ProductService(ProductRepository productRepository) {
+           this.productRepository = productRepository;
+         }
+         
+         // Setter Injection → optional dependency
+         @Autowired
+         public void setLoggerService(LoggerService loggerService) {
+           this.loggerService = loggerService;
+         }
+         
+         public void processProduct(int productId) {
+           productRepository.save(productId);
+           discountService.applyDiscount(productId);
+           if (loggerService != null) {
+               loggerService.log("Processed product: " + productId);
+           }
+         }
+      }
+      ```
 
 2. **Dependency Lookup (DL)**  
    - Objects actively look up dependencies from a container/service.  
